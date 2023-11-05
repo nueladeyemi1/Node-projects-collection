@@ -4,6 +4,8 @@ const http = require('http')
 
 const url = require('url')
 
+const replaceTemplate = require('./modules/replaceTemplate')
+
 // BLOCKING SYNCHONOUS WAY
 
 // const textIn = fs.readFileSync('./txt/input.txt', 'utf-8')
@@ -33,25 +35,6 @@ const url = require('url')
 
 ///////SERVER
 
-// 1. CREATE SERVER
-const replaceTemplate = (temp, product) => {
-  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName)
-
-  //   output = temp.replace(/{%PRODUCTNAME%}/g, product.productName)
-  output = output.replace(/{%IMAGE%}/g, product.image)
-  output = output.replace(/{%PRICE%}/g, product.price)
-  output = output.replace(/{%FROM%}/g, product.from)
-  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients)
-  output = output.replace(/{%QUANTITY%}/g, product.quantity)
-  output = output.replace(/{%DESCRIPTION%}/g, product.description)
-  output = output.replace(/{%ID%}/g, product.id)
-
-  if (!product.organic)
-    output = output.replace(/{%NON_ORGANIC%}/g, 'not-organic')
-
-  return output
-}
-
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8')
 const tempCard = fs.readFileSync(
   `${__dirname}/templates/template-card.html`,
@@ -69,8 +52,9 @@ const tempProduct = fs.readFileSync(
 const dataObj = JSON.parse(data)
 
 const server = http.createServer((req, res) => {
+  const { query, pathname: pathName } = url.parse(req.url, true)
   //   console.log(req.url)
-  const pathName = req.url
+  // const pathName = req.url
 
   //OVERVIEW
   if (pathName === '/overview') {
@@ -88,7 +72,15 @@ const server = http.createServer((req, res) => {
 
     //PRODUCT PAGE
   } else if (pathName === '/product') {
-    res.end('This is product')
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    })
+
+    const product = dataObj[query.id]
+
+    const output = replaceTemplate(tempProduct, product)
+
+    res.end(output)
 
     //API
   } else if (pathName === '/api') {
@@ -106,6 +98,6 @@ const server = http.createServer((req, res) => {
   }
 })
 
-server.listen(8000, '127.0.0.2', () => {
+server.listen(8000, '127.0.0.1', () => {
   console.log('Listening to request on port 8000')
 })
