@@ -1,0 +1,15 @@
+{
+  "name": "natours-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodeman app.js"
+  },
+  "author": "Emmanuel Adeyemi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodeman": "^1.1.2"
+  }
+}
