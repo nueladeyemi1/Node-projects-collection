@@ -4,12 +4,13 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodeman app.js"
+    "start": "nodemon server.js"
   },
   "author": "Emmanuel Adeyemi",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
-    "nodeman": "^1.1.2"
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.1"
   }
 }
