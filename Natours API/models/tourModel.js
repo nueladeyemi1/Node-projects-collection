@@ -60,13 +60,13 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
-tourSchema.virtual('durationWeek').get(function() {
-  return this.duration / 7;
-});
+// tourSchema.virtual('durationWeek').get(function() {
+//   return this.duration / 7;
+// });
 
 // Document Middleware: runs on .save() and .create()
 
-tourSchema.pre('save', function() {});
+// tourSchema.pre('save', function() {});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
