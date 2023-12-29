@@ -15,7 +15,8 @@ mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true
   })
   .then(con => {
     // console.log(con.connections);
@@ -64,6 +65,7 @@ mongoose
 //   });
 
 const port = process.env.PORT || 3000;
+// const port = 8000;
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
