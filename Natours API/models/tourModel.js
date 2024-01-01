@@ -10,13 +10,13 @@ const tourSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       maxLength: [40, 'A tour must have less or equal than 40 characters'],
-      minLength: [10, 'A tour must have less or equal than 40 characters'],
-      validate: {
-        validator: function(val) {
-          return validator.isAlpha(val, ['en-US'], { ignore: ' ' });
-        },
-        message: 'Tour name should only contain character'
-      }
+      minLength: [10, 'A tour must have less or equal than 40 characters']
+      // validate: {
+      //   validator: function(val) {
+      //     return validator.isAlpha(val, ['en-US'], { ignore: ' ' });
+      //   },
+      //   message: 'Tour name should only contain character'
+      // }
     },
     duration: {
       type: Number,
