@@ -67,7 +67,26 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  const decode = await promisify(jwt.verify(token, process.env.JWT_SECRET));
+  const decoded = await promisify(jwt.verify(token, process.env.JWT_SECRET));
+
+  const freshUser = await User.findById(decoded.id);
+
+  if (!freshUser) {
+    return next(
+      new AppError(
+        'The user belonging to this token does not longer exist.',
+        401
+      )
+    );
+  }
+
+  if (freshUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError('User recently changed password! Please log in again.', 401)
+    );
+  }
+
+  req.user = freshUser;
 
   next();
 });
