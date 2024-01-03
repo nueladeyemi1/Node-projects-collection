@@ -6,7 +6,7 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
 const signToken = id => {
-  jwt.sign({ id }, process.env.JWT_TOKEN, {
+  return jwt.sign({ id }, process.env.JWT_TOKEN, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
@@ -58,7 +58,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.spliit(' ')[1];
+    token = req.headers.authorization.split(' ')[1];
+    console.log(token);
   }
 
   if (!token) {
@@ -90,3 +91,28 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};
+
+exports.forgetPassword = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new AppError('There is no user with the email address', 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
+
+  await user.save({ validateBeforeSave: false });
+});
+
+exports.resetPassword = (req, res, next) => {};
