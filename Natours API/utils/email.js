@@ -7,17 +7,17 @@ const sendEmail = async options => {
     port: process.env.EMAIL_PORT,
     auth: {
       user: process.env.EMAIL_USERNAME,
-      password: process.env.EMAIL_PASSWORD
+      pass: process.env.EMAIL_PASSWORD
     }
 
     // less secure app option in gmail
   });
 
   const mailOptions = {
-    from: 'Emmanuel Adeyemi <hello@emmanueladeyemi.com>',
-    to: option.email,
-    subject: option.subject,
-    text: option.message
+    from: 'Emmanuel Adeyemi <tes3@mail.com>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message
   };
 
   // TRANSPORTER
