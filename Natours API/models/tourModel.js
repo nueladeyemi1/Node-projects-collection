@@ -127,6 +127,7 @@ const tourSchema = new mongoose.Schema(
 
 // Document Middleware: runs on .save() and .create()
 
+//Virtual Populate
 tourSchema.virtual('reviews', {
   ref: 'Reviews',
   foreignField: 'tour',
