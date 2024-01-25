@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify"');
+const slugify = require('slugify');
 const validator = require('validator');
 const User = require('./userModel');
 
@@ -120,6 +120,10 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtual: true }
   }
 );
+
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
 
 // tourSchema.virtual('durationWeek').get(function() {
 //   return this.duration / 7;
