@@ -180,12 +180,12 @@ tourSchema.pre(/^find/, function(next) {
 
 //AGGREGATION MIDDLEWARE
 
-tourSchema.pre('aggregate', function(next) {
-  this.pipeLine().unshift({ $match: { secretTour: { $ne: true } } });
+// tourSchema.pre('aggregate', function(next) {
+//   this.pipeLine().unshift({ $match: { secretTour: { $ne: true } } });
 
-  console.log(this.pipeLine());
-  next();
-});
+//   console.log(this.pipeLine());
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
