@@ -76,6 +76,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
     // console.log(token);
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -104,6 +106,37 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = freshUser;
+
+  next();
+});
+
+//ONLY FOR RENDERED PAGES AND THERE WILL BE NO ERRORS
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    //THIS VERIFIES THE TOKEN
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
+
+    //CHECK IF USER STILL EXIST
+    const freshUser = await User.findById(decoded.id);
+
+    if (!freshUser) {
+      return next();
+    }
+
+    //CHECK IF USER RECENTLY CHANGED THEIR PASSWORD
+
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+    //THERE IS A LOGGED IN USER
+    res.locals.user = freshUser;
+
+    return next();
+  }
 
   next();
 });
