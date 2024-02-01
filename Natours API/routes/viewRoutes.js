@@ -8,7 +8,7 @@ const {
 
 const router = express.Router();
 
-router.use(isLoggedIn);
+// router.use(isLoggedIn);
 
 router.get('/', getOverview);
 
