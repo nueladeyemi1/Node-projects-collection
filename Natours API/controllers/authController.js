@@ -8,7 +8,7 @@ const AppError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
 
 const signToken = id => {
-  return jwt.sign({ id }, process.env.JWT_TOKEN, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
@@ -117,6 +117,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = freshUser;
+  res.locals.user = freshUser;
 
   next();
 });
