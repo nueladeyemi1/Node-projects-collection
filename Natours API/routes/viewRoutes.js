@@ -4,7 +4,8 @@ const {
   getOverview,
   getTour,
   getLoginForm,
-  getAccount
+  getAccount,
+  updateUserData
 } = require('../controllers/viewsController');
 
 const router = express.Router();
@@ -26,5 +27,7 @@ router.get('/tour/:slug', getTour);
 router.get('/login', getLoginForm);
 
 router.get('/me', protect, getAccount);
+
+router.post('/submit-user-data', protect, updateUserData);
 
 module.exports = router;
