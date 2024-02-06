@@ -33,15 +33,18 @@ if (logOutBtn) logOutBtn.addEventListener('click', logout);
 if (userDataForm)
   userDataForm.addEventListener('submit', e => {
     e.preventDefault();
-    const name = document.getElementById('name').value;
 
-    const email = document.getElementById('email').value;
+    const form = new FormData();
+
+    form.append('name', document.getElementById('name').value);
+
+    form.append('email', document.getElementById('email').value);
+    form.append('photo', document.getElementById('photo').file[0]);
 
     // updateData(name, email);
     updateSettings(
       {
-        name,
-        email
+        form
       },
       'data'
     );
@@ -50,6 +53,7 @@ if (userDataForm)
 if (userPasswordForm)
   userDataForm.addEventListener('submit', async e => {
     e.preventDefault();
+
     const passwordCurrent = document.getElementById('password-current').value;
 
     const password = document.getElementById('password').value;
