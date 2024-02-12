@@ -2,6 +2,7 @@ import '@babel/polyfill';
 // import { eventNames } from '../../app';
 import { login, logout } from './login';
 import { displayMap } from './mapbox';
+import { bookTour } from './stripe';
 import { updateSettings } from './updateSettings';
 
 const mapBox = document.getElementById('map');
@@ -10,6 +11,7 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 document.querySelector('.btn--save-password').textContent === 'updating...';
+const bookBtn = document.getElementById('book-tour');
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -75,4 +77,12 @@ if (userPasswordForm)
     document.getElementById('password-current').value = '';
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
+  });
+
+if (bookBtn)
+  bookBtn.addEventListener('click', e => {
+    e.target.textContent = 'Processing';
+    const { tourId } = e.target.dataset;
+
+    bookTour(tourId);
   });
