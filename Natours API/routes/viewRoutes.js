@@ -1,11 +1,13 @@
 const express = require('express');
 const { isLoggedIn, protect } = require('../controllers/authController');
+const { createBookingCheckout } = require('../controllers/bookingController');
 const {
   getOverview,
   getTour,
   getLoginForm,
   getAccount,
-  updateUserData
+  updateUserData,
+  getMyTours
 } = require('../controllers/viewsController');
 
 const router = express.Router();
@@ -20,13 +22,15 @@ const router = express.Router();
 
 // router.get('/me', protect, getAccount);
 
-router.get('/', getOverview);
+router.get('/', createBookingCheckout, getOverview);
 
 router.get('/tour/:slug', getTour);
 
 router.get('/login', getLoginForm);
 
 router.get('/me', protect, getAccount);
+
+router.get('/my-tours', protect, getMyTours);
 
 router.post('/submit-user-data', protect, updateUserData);
 
