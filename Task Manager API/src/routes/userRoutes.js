@@ -1,7 +1,4 @@
 const express = require('express')
-const User = require('../model/User')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const { login, register } = require('../controllers/userControllers')
 
 const router = express.Router()
