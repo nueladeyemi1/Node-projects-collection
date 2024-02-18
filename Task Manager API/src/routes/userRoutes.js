@@ -4,6 +4,7 @@ const {
   register,
   forgetPassword,
   deleteAccount,
+  resetPassword,
 } = require('../controllers/userControllers')
 const auth = require('../middlewares/auth')
 
@@ -18,6 +19,8 @@ router.post('/register', register)
 router.post('/login', login)
 
 router.post('/forget-password', forgetPassword)
+
+router.patch('/reset-password/:token', resetPassword)
 
 router.delete('/:id', auth, deleteAccount)
 
