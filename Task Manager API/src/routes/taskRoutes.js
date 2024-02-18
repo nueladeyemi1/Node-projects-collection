@@ -35,7 +35,7 @@ router.get('/', auth, async (req, res) => {
   try {
     const tasks = await Task.find({
       owner: req.user._id,
-    })
+    }).populate('owner', ['name', 'email'])
 
     res.status(200).json({
       status: 'success',
@@ -54,7 +54,7 @@ router.get('/:id', auth, async (req, res) => {
     const task = await Task.findOne({
       _id: req.params.id,
       owner: req.user._id,
-    })
+    }).populate('owner')
 
     if (!task) {
       return res.status(404).json({

@@ -50,3 +50,27 @@ exports.login = async (req, res) => {
     res.status(400).send({ error: err })
   }
 }
+
+exports.forgetPassword = async (req, res) => {
+  const user = await User.findOne({ email: req.body.email })
+
+  if (!user) {
+    throw new Error('User not found')
+  }
+
+  req.body.password = user.password
+
+  await user.save({ validateBeforeSave: true })
+
+  res.send(user)
+}
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+
+    user.active = false
+  } catch (err) {
+    res.status(400).send({ error: err })
+  }
+}
