@@ -1,13 +1,33 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
+const validator = require('validator')
 
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    active: { type: Boolean, default: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      validate: {
+        validator: function(val) {
+          return validator.isEmail(val)
+        },
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 8,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
   },
   {
     timestamps: true,
@@ -20,6 +40,16 @@ userSchema.pre('save', async function(next) {
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 12)
   }
+
+  next()
+})
+
+userSchema.pre(/^find/, function(next) {
+  const user = this
+
+  user.find({
+    active: { $ne: false },
+  })
 
   next()
 })

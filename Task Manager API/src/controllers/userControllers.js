@@ -95,20 +95,30 @@ exports.forgetPassword = async (req, res) => {
 }
 
 exports.resetPassword = async (req, res) => {
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex')
+  try {
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex')
 
-  console.log(hashedToken)
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpires: { $gt: Date.now() },
+    })
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-  })
+    user.password = req.body.password
+    user.passwordResetToken = undefined
+    user.passwordResetExpires = undefined
 
-  res.status(200).json({
-    user,
-  })
+    await user.save()
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your password has been reset successfully',
+    })
+  } catch (err) {
+    res.status(400).json({ error: err })
+  }
 }
 
 exports.deleteAccount = async (req, res) => {
@@ -116,7 +126,14 @@ exports.deleteAccount = async (req, res) => {
     const user = await User.findById(req.params.id)
 
     user.active = false
+
+    await user.save()
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your account has been deleted',
+    })
   } catch (err) {
-    res.status(400).send({ error: err })
+    res.status(400).json({ error: err })
   }
 }
