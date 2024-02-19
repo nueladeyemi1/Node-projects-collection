@@ -1,16 +1,19 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
-const userRoutes = require('./src/routes/userRoutes')
-const taskRoutes = require('./src/routes/taskRoutes')
+const userRoutes = require('../src/routes/userRoutes')
+const taskRoutes = require('../src/routes/taskRoutes')
 const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
+const serverless = require('serverless-http')
+
+let records = []
 
 require('dotenv').config()
-require('./db')
+require('../db')
 const PORT = process.env.PORT
 
 app.use(cors())
@@ -41,6 +44,10 @@ app.get('/', (req, res) => {
   })
 })
 
-app.listen(PORT, () => {
-  console.log(`Node APP is running on ${PORT}`)
-})
+// app.listen(PORT, () => {
+//   console.log(`Node APP is running on ${PORT}`)
+// })
+
+app.use('/.netlify/functions/api', router)
+
+module.exports.handler = serverless(app)
