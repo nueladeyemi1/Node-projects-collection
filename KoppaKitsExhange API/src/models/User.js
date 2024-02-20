@@ -16,12 +16,14 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please input a email'],
-    // validate: {
-    //   function(val) {
-    //     return validator.isEmail(val)
-    //   },
-    //   message: 'Please provide a valid email address',
-    // },
+    unique: true,
+    lowercase: true,
+    validate: {
+      validator: function(value) {
+        return validator.isEmail(value)
+      },
+      message: 'Please provide a valid email address',
+    },
   },
   NYSC_camp: {
     type: String,
