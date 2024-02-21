@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const itemRoutes = require('./src/routes/itemRoutes')
 const userRoutes = require('./src/routes/userRoutes')
@@ -8,6 +9,8 @@ require('dotenv').config()
 require('./DB.js')
 
 const app = express()
+
+app.use(cors())
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))

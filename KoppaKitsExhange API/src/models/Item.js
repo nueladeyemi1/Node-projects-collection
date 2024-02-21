@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
 const itemSchema = new mongoose.Schema({
-  images: [String],
+  images: [],
   size: {
-    type: String,
-    enum: ['small', 'medium', 'large', 'extra-large'],
+    type: Number,
+    // enum: ['small', 'medium', 'large', 'extra-large'],
   },
   status: String,
   owner: {

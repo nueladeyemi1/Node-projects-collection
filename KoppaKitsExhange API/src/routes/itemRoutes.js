@@ -1,5 +1,7 @@
 const express = require('express')
 const { uploadKitsImages } = require('../controllers/itemController')
+const { auth } = require('../middlewares/auth.js')
+const Item = require('../models/Item')
 
 const router = express.Router()
 
@@ -10,11 +12,17 @@ const router = express.Router()
 //   })
 // })
 
-router.post('/', uploadKitsImages, (req, res) => {
-  console.log(req.files)
+router.post('/', auth, uploadKitsImages, async (req, res) => {
+  console.log(req.files.images)
+  const item = await Item.create({
+    images: req.files.images,
+    ...req.body,
+    owner: req.user,
+  }).select('-password')
+
   res.status(200).json({
-    message: 'file submitted r',
-    file: req.files,
+    message: 'item submitted successfully',
+    data: item,
   })
 })
 
