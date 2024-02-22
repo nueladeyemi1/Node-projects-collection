@@ -3,7 +3,12 @@ const {
   createMessages,
   getMessages,
 } = require('../controllers/messageController')
-const { signup, login, getUsers } = require('../controllers/userController')
+const {
+  signup,
+  login,
+  getUsers,
+  getuserByCamp,
+} = require('../controllers/userController')
 const { auth } = require('../middlewares/auth')
 const app = express()
 const http = require('http').Server(app)
@@ -16,6 +21,8 @@ router.post('/signup', signup)
 router.post('/login', login)
 
 router.get('/', auth, getUsers)
+
+router.get('/camp', auth, getuserByCamp)
 
 router
   .route('/:userId/messages')

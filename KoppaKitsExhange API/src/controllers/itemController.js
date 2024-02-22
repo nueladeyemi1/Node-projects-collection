@@ -32,3 +32,55 @@ const upload = multer({
 })
 
 exports.uploadKitsImages = upload.fields([{ name: 'images', maxCount: 8 }])
+
+exports.createItem = async (req, res) => {
+  try {
+    const item = await Item.create({
+      images: req.files.images,
+      ...req.body,
+      owner: req.user,
+    }).select('-password')
+
+    res.status(200).json({
+      message: 'item submitted successfully',
+      data: item,
+    })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
+exports.getItemsByCamp = async (req, res) => {
+  try {
+    const items = await Item.find({}).populate('owner', 'NYSC_camp')
+
+    const filteredItems = items.filter(
+      (item) => item?.owner?.NYSC_camp === req.user?.NYSC_camp
+    )
+
+    res.status(200).json({
+      status: 'success',
+      length: filteredItems.length,
+      data: filteredItems,
+    })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
+exports.getItemsByStatus = async (req, res) => {
+  try {
+    const items = await Item.find({ status: req.body.status }).populate(
+      'owner',
+      'phoneNumber'
+    )
+
+    res.status(200).json({
+      status: 'success',
+      length: items.length,
+      data: items,
+    })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}

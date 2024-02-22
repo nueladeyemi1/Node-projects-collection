@@ -3,8 +3,13 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 exports.auth = async (req, res, next) => {
-  const token = req.headers.authorization.replace('Bearer ', '')
   try {
+    const token = req.headers.authorization.replace('Bearer ', '')
+
+    if (!token || token === undefined) {
+      throw new Error('Invalid authorization')
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
     const user = await User.findOne({

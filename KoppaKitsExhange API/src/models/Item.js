@@ -6,7 +6,10 @@ const itemSchema = new mongoose.Schema({
     type: Number,
     // enum: ['small', 'medium', 'large', 'extra-large'],
   },
-  status: String,
+  status: {
+    type: String,
+    enum: ['searching', 'pairing', 'paired'],
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
