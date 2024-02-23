@@ -23,7 +23,6 @@ exports.createMessages = async (req, res) => {
 }
 
 exports.getMessages = async (req, res) => {
-  console.log(req.user)
   try {
     const messages = await Message.find({
       name: req.params.userId,

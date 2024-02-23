@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { sendEmail } = require('../utils/email')
 require('dotenv').config()
 
 exports.signup = async (req, res) => {
@@ -53,6 +54,36 @@ exports.login = async (req, res) => {
     res.status(400).json({
       status: 'error',
       message: err.message,
+    })
+  }
+}
+
+exports.forgetPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email })
+
+    if (!user) {
+      throw new Error('User not found, please create a new account')
+    }
+
+    const resetToken = user.createPasswordResetToken()
+
+    await user.save({ validateBeforeSave: false })
+
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/users/reset-password/${resetToken}`
+
+    sendEmail(user.email, resetUrl)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your password link has been sent to your email address',
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.stack,
     })
   }
 }
