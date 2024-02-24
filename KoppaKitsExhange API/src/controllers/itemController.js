@@ -39,7 +39,7 @@ exports.createItem = async (req, res) => {
       images: req.files.images,
       ...req.body,
       owner: req.user,
-    }).select('-password')
+    })
 
     res.status(200).json({
       message: 'item submitted successfully',

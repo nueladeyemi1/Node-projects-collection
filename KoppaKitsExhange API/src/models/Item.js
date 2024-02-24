@@ -2,9 +2,20 @@ const mongoose = require('mongoose')
 
 const itemSchema = new mongoose.Schema({
   images: [],
-  size: {
+  shoe_size: {
     type: Number,
     // enum: ['small', 'medium', 'large', 'extra-large'],
+  },
+  clothing_size: {
+    type: String,
+    enum: ['small', 'medium', 'large', 'extra-large'],
+  },
+  wanted_shoe_size: {
+    type: Number,
+  },
+  wanted_clothing_size: {
+    type: String,
+    enum: ['small', 'medium', 'large', 'extra-large'],
   },
   status: {
     type: String,

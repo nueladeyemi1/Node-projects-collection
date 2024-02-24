@@ -1,6 +1,8 @@
-# KoppaExchange API Documentation
+# KoppaKitsExchange API Documentation
 
-Welcome to the KoppaExchange API documentation. This API provides a comprehensive set of endpoints to facilitate user management, messaging, and item-related functionalities for Nigerian NYSC corp members. Developers can integrate these features seamlessly into their applications to enhance user experiences and streamline interactions within the KoppaExchange platform.
+Welcome to the KoppaKitsExchange API documentation. This API provides a comprehensive set of endpoints to facilitate user management, messaging, and item-related functionalities for Nigerian NYSC corp members. Developers can integrate these features seamlessly into their applications to enhance user experiences and streamline interactions within the KoppaExchange platform.
+
+[Visit this link for Postman documentation](https://documenter.getpostman.com/view/25574591/2sA2rCUhQQ)
 
 ## Users
 
@@ -117,4 +119,4 @@ Filter items by status with Bearer Token authorization. Provide the desired stat
 
 Endpoint: `{{url}}/api/v1/items`
 
-Create a new item with Bearer Token authorization. Ensure all necessary details are included in the request.
+Create a new item with Bearer Token authorization. Ensure all necessary details are included in the request. If clothing, the query string for clothing_size and wanted_clothing_size will be of type String and enum of ['small', 'medium', 'large', 'extra-large'] while the query string for shoe_size and wanted_clothing_size will be of type Number.
