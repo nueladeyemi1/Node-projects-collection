@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const { sendEmail } = require('../utils/email')
 require('dotenv').config()
@@ -58,6 +59,23 @@ exports.login = async (req, res) => {
   }
 }
 
+exports.logout = (req, res) => {
+  try {
+    req.session = null
+    req.token = null
+
+    res.status(200).json({
+      status: 'success',
+      message: 'You have successfully been logged out',
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    })
+  }
+}
+
 exports.forgetPassword = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email })
@@ -74,7 +92,16 @@ exports.forgetPassword = async (req, res) => {
       'host'
     )}/users/reset-password/${resetToken}`
 
-    sendEmail(user.email, resetUrl)
+    try {
+      sendEmail(user.email, resetUrl)
+    } catch (err) {
+      user.passwordResetToken = undefined
+      user.passwordResetTokenExpires = undefined
+
+      await user.save({ validateBeforeSave: false })
+
+      return next(err)
+    }
 
     res.status(200).json({
       status: 'success',
@@ -84,6 +111,62 @@ exports.forgetPassword = async (req, res) => {
     res.status(400).json({
       status: 'error',
       message: err.stack,
+    })
+  }
+}
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.resetToken)
+      .digest('hex')
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpires: { $gt: Date.now() },
+    })
+
+    user.password = req.body.password
+    user.passwordResetToken = undefined
+    user.passwordResetTokenExpires = undefined
+
+    await user.save()
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password has been reset successfully',
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    })
+  }
+}
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    const userId = req.params.userId
+
+    const user = await User.findById(userId)
+
+    if (!user || user._id !== userId) {
+      throw new Error(`User ${userId} does not exist`)
+    }
+
+    user.active = false
+
+    await user.save()
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your account has been deleted successfully.',
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
     })
   }
 }

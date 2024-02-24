@@ -9,6 +9,9 @@ const {
   getUsers,
   getuserByCamp,
   forgetPassword,
+  resetPassword,
+  deleteAccount,
+  logout,
 } = require('../controllers/userController')
 const { auth } = require('../middlewares/auth')
 const app = express()
@@ -21,7 +24,13 @@ router.post('/signup', signup)
 
 router.post('/login', login)
 
+router.get('/logout', auth, logout)
+
 router.post('/forget-password', forgetPassword)
+
+router.post('/reset-password/:resetToken', resetPassword)
+
+router.delete('/delete/:userId', auth, deleteAccount)
 
 router.get('/', auth, getUsers)
 

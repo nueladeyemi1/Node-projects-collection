@@ -22,6 +22,7 @@ exports.auth = async (req, res, next) => {
 
     req.user = user
     req.token = token
+    req.session = token
 
     next()
   } catch (err) {

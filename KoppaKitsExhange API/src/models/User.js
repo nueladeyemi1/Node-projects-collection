@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
     },
     coordinates: [Number],
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
 })
@@ -50,6 +54,13 @@ userSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12)
   }
+  next()
+})
+
+userSchema.pre(/^find/, function(next) {
+  this.find({
+    active: { $ne: false },
+  })
   next()
 })
 
