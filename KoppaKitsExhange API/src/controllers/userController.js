@@ -59,8 +59,10 @@ exports.login = async (req, res) => {
   }
 }
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
   try {
+    // const user = await User.findOne({ email: req.user.email })
+
     req.session = null
     req.token = null
 
@@ -151,8 +153,8 @@ exports.deleteAccount = async (req, res) => {
 
     const user = await User.findById(userId)
 
-    if (!user || user._id !== userId) {
-      throw new Error(`User ${userId} does not exist`)
+    if (!user || req.user.email !== user.email) {
+      throw new Error(`User does not exist`)
     }
 
     user.active = false
