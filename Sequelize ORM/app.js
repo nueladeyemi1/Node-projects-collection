@@ -1,4 +1,5 @@
 const express = require('express')
+const userRoutes = require('./src/routes/userRoutes')
 const bodyParser = require('body-parser')
 const Sequelize = require('sequelize')
 require('dotenv').config()
@@ -25,7 +26,7 @@ sequelize
 
 //Sequelize Model
 
-const User = sequelize.define(
+exports.User = sequelize.define(
   'tbl_users',
   {
     id: {
@@ -64,6 +65,10 @@ const User = sequelize.define(
 )
 
 sequelize.sync()
+
+// module.exports = User
+
+app.use('/users', userRoutes)
 
 //Listen for requests
 const PORT = process.env.PORT || 1000
