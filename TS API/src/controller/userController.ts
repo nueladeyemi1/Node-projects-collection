@@ -1,6 +1,6 @@
 import { UserModel } from '../model/user'
 
-export const getUser = async () => {
+export const getUsers = async () => {
   await UserModel.find()
 }
 
