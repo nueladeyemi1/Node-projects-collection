@@ -8,7 +8,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import router from './router'
 
-dotenv.config()
+dotenv?.config()
 
 const app = express()
 
@@ -52,3 +52,5 @@ mongoose.connection.on('error', (err: Error) => {
 })
 
 app.use('/', router())
+
+export default app
