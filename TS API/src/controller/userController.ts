@@ -4,8 +4,7 @@ export const getUser = async () => {
   await UserModel.find()
 }
 
-export const getUserWithEmail = async (email: string) =>
-  await UserModel.findOne({ email })
+export const getUserWithEmail = (email: string) => UserModel.findOne({ email })
 
 export const getUserBySessionToken = async (sessionToken: string) =>
   await UserModel.findOne({
