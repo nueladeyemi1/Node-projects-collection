@@ -9,6 +9,8 @@ describe('test POST /login', () => {
         password: 'Nuel1234',
         email: 'nuel@adeyemi.com',
       })
-    expect(response.status).toBe(200)
+      .expect('Content-Type', /json/)
+      .expect(200)
+    // expect(response.status).toBe('success')
   })
 })
