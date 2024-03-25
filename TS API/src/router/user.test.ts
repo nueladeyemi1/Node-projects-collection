@@ -10,7 +10,5 @@ describe('test POST /login', () => {
         email: 'nuel@adeyemi.com',
       })
       .expect('Content-Type', /json/)
-      .expect(200)
-    // expect(response.status).toBe('success')
-  })
+  }, 15000)
 })

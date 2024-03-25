@@ -17,15 +17,21 @@ server.listen(8080, () => {
 
 mongoose.Promise = Promise
 
-mongoose
-  .connect(URL, {
-    dbName: 'TS-API',
-  })
-  .then(() => console.log('connected to database'))
+mongoose.connect(URL, {
+  dbName: 'TS-API',
+})
 
-// mongoose.connection.once('connection', () => {
-//   console.log('connected to database')
-// })
+mongoose.connection.on('connecting', () => console.info('database connecting'))
+
+mongoose.connection.on('connected', () => console.info('database connected'))
+
+mongoose.connection.on('disconnecting', () =>
+  console.info('database disconnecting')
+)
+
+mongoose.connection.on('disconnected', () =>
+  console.info('database disconnected')
+)
 
 mongoose.connection.on('error', (err: Error) => {
   console.log('Error connecting to mongoDB', err)
